@@ -1,16 +1,11 @@
-import { Routes, Route } from "react-router-dom";
 import Header from "../widgets/Header/ui/Header";
-import { appRoutes } from "../shared/config/routes";
+import { Outlet } from "react-router-dom";
 
 function App() {
     return (
         <div>
             <Header/>
-            <Routes>
-                {appRoutes.map(({path, element}) => (
-                    <Route key={path} path={path} element={element} />
-                ))}
-            </Routes>
+            <Outlet/>
         </div>
     )
 }

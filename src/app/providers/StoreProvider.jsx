@@ -1,12 +1,16 @@
-import { Provider } from "react-redux"
-import { BrowserRouter } from "react-router-dom"
-// import { store } from "../store"
+import { Provider } from "react-redux";
+import { store } from "../store";
+
+import { RouterProvider } from "react-router-dom";
+import { AppRouter } from "../../shared/config/routes.jsx";
 
 function StoreProvider({ children }) {
     return (
-        <BrowserRouter>
-            { children }
-        </BrowserRouter>    
+        <Provider store={store}>
+            <RouterProvider router={AppRouter}>
+                { children }
+            </RouterProvider>     
+        </Provider>     
     )
 }
 

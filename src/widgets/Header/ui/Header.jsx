@@ -2,10 +2,10 @@ import { Link } from "react-router-dom"
 
 function Header() {
   return (
-    <div style={{display: "flex", justifyContent: "space-around"}} >
+    <div style={{display: "flex"}} >
         <h1>Mini Blog</h1>
         <div>
-            <ul style={{display: "flex",}}>
+            <ul>
                 <li><Link to={"/"}>Home</Link></li>
                 <li><Link to={"/login"}>Login</Link></li>
                 <li><Link to={"/profile"}>Profile</Link></li>
