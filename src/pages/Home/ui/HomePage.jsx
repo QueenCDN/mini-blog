@@ -1,11 +1,15 @@
-import React from 'react'
+import Sidebar from '../../../widgets/Sidebar/ui/Sidebar.jsx';
+import PostList from '../../../widgets/PostList/ui/PostList.jsx';
 
 function HomePage() {
-  return (
-    <div>
-      <h1 className='text-3xl font-bold underline'>HomePage</h1>
+return (
+  <main className="container mx-auto px-4 py-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <PostList />
+      <Sidebar /> 
     </div>
-  )
+  </main>
+)
 }
 
 export default HomePage

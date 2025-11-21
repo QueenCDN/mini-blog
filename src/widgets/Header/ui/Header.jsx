@@ -10,7 +10,7 @@ function Header() {
         <div>
           <ul className="menu-buttons">
             <li><Link to={"/profile"}>Profile</Link></li>
-            <li><button className="login-button"><Link to={"/login"}>Logout</Link></button></li>
+            <li><button className="login-button" style={{marginLeft: "21px"}}><Link to={"/login"}>Logout</Link></button></li>
           </ul>
         </div>
       </div>

@@ -11,7 +11,7 @@ body {
 .container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0px 5px 0px 5px;
+    padding: 0px 10px 0px 10px;
 }
 
 h1 {
@@ -24,12 +24,16 @@ a {
     font-weight: 600;
 }
 
+li {
+    list-style: none;
+}
+
 .Header {
     background-color: #fff;
     width: 100%;
     height: auto;
     padding: 30px 0px 30px 0px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 .Header .container {
     display: flex;
@@ -48,10 +52,66 @@ a {
     border-radius: 12px;
     padding: 4px 8px 4px 8px;
     transition: ease-in 0.15s;
-    margin-left: 21px;
 }
 
 .login-button:hover {
     background-color: crimson;
     color: aliceblue;
+}
+
+.category-link {
+    padding: 15px 12px 15px 12px;
+    border-radius: 10px;
+    transition: ease-in 0.15s;
+    margin-bottom: 10px;
+    background-color: rgba(234, 234, 234, 0.368);
+}
+
+.category-link a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-weight: 400;
+    color: rgb(97, 143, 144);
+}
+
+.category-link:hover {
+    background-color: rgba(233, 46, 46, 0.5);
+}
+
+.catedory-sidebar {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.post-item {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: calc(50vh - 300px);
+}
+
+.login-form input {
+    background-color: rgba(234, 234, 234, 0.368);
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    color: rgb(65, 116, 117);
+    font-weight: 500;
+}
+
+.login-form input:focus {
+    outline: none;
 }
