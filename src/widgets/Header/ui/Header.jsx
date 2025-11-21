@@ -2,16 +2,19 @@ import { Link } from "react-router-dom"
 
 function Header() {
   return (
-    <div style={{display: "flex"}} >
-        <h1>Mini Blog</h1>
+    <header className="Header">
+      <div className="container">
         <div>
-            <ul>
-                <li><Link to={"/"}>Home</Link></li>
-                <li><Link to={"/login"}>Login</Link></li>
-                <li><Link to={"/profile"}>Profile</Link></li>
-            </ul>
+          <Link to={"/"}><h1>Mini Blog</h1></Link>
         </div>
-    </div>
+        <div>
+          <ul className="menu-buttons">
+            <li><Link to={"/profile"}>Profile</Link></li>
+            <li><button className="login-button"><Link to={"/login"}>Logout</Link></button></li>
+          </ul>
+        </div>
+      </div>
+    </header>
   )
 }
 

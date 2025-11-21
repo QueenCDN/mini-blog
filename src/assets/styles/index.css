@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+body {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #ececec;
+}
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0px 5px 0px 5px;
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+a {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.Header {
+    background-color: #fff;
+    width: 100%;
+    height: auto;
+    padding: 30px 0px 30px 0px;
+    margin-bottom: 40px;
+}
+.Header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menu-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.login-button {
+    background-color: none;
+    border: 2px solid crimson;
+    border-radius: 12px;
+    padding: 4px 8px 4px 8px;
+    transition: ease-in 0.15s;
+    margin-left: 21px;
+}
+
+.login-button:hover {
+    background-color: crimson;
+    color: aliceblue;
+}
