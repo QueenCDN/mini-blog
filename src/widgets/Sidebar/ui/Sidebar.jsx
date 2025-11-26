@@ -1,6 +1,7 @@
 function Sidebar() {
   return (
-    <div className="lg:col-span-1 catedory-sidebar">
+    // i need to fix height of sidebar
+    <div className="lg:col-span-1 catedory-sidebar self-start">
       <div className="p-4">
         <h2 className="text-xl font-bold mb-4">Categories</h2>
         <ul className="list-disc list-inside">

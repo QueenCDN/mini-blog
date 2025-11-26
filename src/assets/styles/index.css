@@ -112,6 +112,50 @@ li {
     font-weight: 500;
 }
 
+.input-field {
+    background-color: rgba(234, 234, 234, 0.368);
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    color: rgb(65, 116, 117);
+    font-weight: 500;
+}
+
+.input-field:focus{
+    outline: none;
+}
+
 .login-form input:focus {
     outline: none;
+}
+
+.mt-10 {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: rgba(200, 200, 200, 0.5);
+    margin: 20px 0px 20px 0px;
+}
+.simple-link {
+    display: inline-block;
+    color: crimson;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.text-profile {
+    font-size: 17px;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 10px;
 }
