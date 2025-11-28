@@ -1,7 +1,5 @@
-function Button({ text, ...props}) {
-  return (
-    <button {...props}>{text}</button>
-  )
-}
+import style from './Button.module.css';
 
-export default Button
+export default function Button({ text, variant="", className = "", ...props }) {
+  return (<button className={`${style[variant]} ${className}`} {...props}>{text}</button>);
+};

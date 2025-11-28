@@ -1,3 +1,6 @@
+import Input from "../../../shared/ui/Input"
+import Button from "../../../shared/ui/Button";
+
 function ProfilePage() {
   return (
     <main className="container mx-auto px-4 py-8">
@@ -9,13 +12,13 @@ function ProfilePage() {
 
         <hr />
         <div>
-          <input type="text" className="input-field" style={{marginBottom: "10px", marginRight: "10px"}} placeholder="username"/>
-          <button className="login-button">Edit</button>  
+          <Input type="text" style={{marginBottom: "10px", marginRight: "10px"}} ph="username"/>
+          <Button text={"Edit"} variant={"fillBtn"}/> 
         </div>
         <div>
-          <input type="text" className="input-field" style={{marginBottom: "10px", marginRight: "10px"}} placeholder="old password"/>
-          <input type="text" className="input-field" style={{marginBottom: "10px", marginRight: "10px"}} placeholder="new password"/>
-          <button className="login-button">Change</button> 
+          <Input type="text" ph="old password" style={{marginBottom: "10px", marginRight: "10px"}} />
+          <Input type="text" ph="new password" style={{marginBottom: "10px", marginRight: "10px"}} />
+          <Button text={"Change"} variant={"fillBtn"}/>
         </div>
       </div>
       <div className="post-item p-6 mb-3">

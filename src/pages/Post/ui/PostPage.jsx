@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function PostPage() {
   return (
     <main className="container mx-auto px-4 py-8">
-      <Link className="simple-link" to={"/"}>← Return</Link>
+      <Link className="simple-link" style={{marginBottom: "20px"}} to={"/"}>← Return</Link>
       <div className="post-item p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-3xl font-bold mb-4">Why we love cats?</h2>
         <p className="text-gray-700 mb-6">

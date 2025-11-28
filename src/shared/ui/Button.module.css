@@ -1,0 +1,28 @@
+.fillBtn {
+    background-color: crimson;
+    border: 2px solid crimson;
+    border-radius: 12px;
+    padding: 4px 8px 4px 8px;
+    transition: ease-in 0.15s;
+    color: aliceblue;
+    font-weight: 500;
+}
+
+.fillBtn:hover {
+    background-color: transparent;
+    color: #000;
+}
+
+.outlineBtn {
+    background-color: transparent;
+    border: 2px solid crimson;
+    border-radius: 12px;
+    padding: 4px 8px 4px 8px;
+    transition: ease-in 0.15s;
+    font-weight: 500;
+}
+
+.outlineBtn:hover {
+    background-color: crimson;
+    color: aliceblue;
+}

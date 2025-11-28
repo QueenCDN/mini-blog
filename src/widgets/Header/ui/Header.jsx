@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import Button from "../../../shared/ui/Button";
 
 function Header() {
   return (
@@ -10,7 +11,7 @@ function Header() {
         <div>
           <ul className="menu-buttons">
             <li><Link to={"/profile"}>Profile</Link></li>
-            <li><button className="login-button" style={{marginLeft: "21px"}}><Link to={"/login"}>Logout</Link></button></li>
+            <li><Link to={"/login"}><Button variant="outlineBtn" text={"Logout"} style={{marginLeft: "21px"}}/></Link></li>
           </ul>
         </div>
       </div>
