@@ -34,7 +34,7 @@ function PostPage() {
           
         </div>
       </div>
-      {/* ЗАВТРА НАДО БУДЕТ НАПИСАТЬ КНОПКУ ЛАЙКА И ДОДЕЛАТЬ КОММЕНТАРИИ */}
+
       <div className="comments-section mt-8">
         <h3 className="text-2xl font-semibold mt-8 mb-4">Comments</h3>
         <textarea
