@@ -1,9 +1,9 @@
 function NotFoundPage() {
   return (
     <div style={{ padding: "40px", textAlign: "center" }}>
-        <h1>404 — Страница не найдена</h1>
-        <p>Ты явно попал не туда. Вернуться домой?</p>
-        <a href="/">На главную</a>
+        <h1>404 — Page Not Found</h1>
+        <p>You are not here. Do you want to back home?</p>
+        <a href="/" className="simple-link">To Home</a>
     </div>
   )
 }
