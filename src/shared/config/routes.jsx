@@ -7,6 +7,9 @@ import PostPage from "../../pages/Post/ui/PostPage.jsx";
 import NotFoundPage from "../../pages/NotFound/ui/NotFoundPage.jsx";
 import App from "../../app/App.jsx";
 
+import { ProtectedRoute } from "../lib/routing/ProtectedRoute.jsx";
+import { GuestRoute } from "../lib/routing/GuestRoute.jsx";
+
 export const AppRouter = createBrowserRouter([
   {
     path: "/",
@@ -15,8 +18,8 @@ export const AppRouter = createBrowserRouter([
     children: [
       {index: true, element: <HomePage/>},
       {path: '/post/:id', element: <PostPage />},
-      {path: '/profile', element: <ProfilePage />},
-      {path: '/login', element: <LoginPage />},
+      {path: '/profile', element: <ProtectedRoute><ProfilePage /></ProtectedRoute>},
+      {path: '/login', element: <GuestRoute><LoginPage /></GuestRoute>},
     ]
   }
 ]);
