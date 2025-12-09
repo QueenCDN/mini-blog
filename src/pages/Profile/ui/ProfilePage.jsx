@@ -5,6 +5,7 @@ import { changeUserPassword, fetchUserProfile, updateUserName } from "../../../e
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserProfile, selectUserStatus } from "../../../entities/user/model/selectors";
 
+import { formatDate } from '../../../shared/lib/formatDate.js';
 
 function ProfilePage() {
   const dispatch = useDispatch();
@@ -54,7 +55,7 @@ function ProfilePage() {
         <h2>User Profile</h2>
         <p className="text-profile">Username: <b>{profile.username}</b></p>
         <p className="text-profile">Email: <b>{profile.email}</b></p>
-        <p className="text-profile">Member since: <b>{profile.createdAt}</b></p>
+        <p className="text-profile">Member since: <b>{formatDate(profile.createdAt)}</b></p>
 
         <hr />
         <div>
