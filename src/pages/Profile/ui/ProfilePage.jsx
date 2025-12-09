@@ -1,6 +1,6 @@
 import Input from "../../../shared/ui/Input"
 import Button from "../../../shared/ui/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { changeUserPassword, fetchUserProfile, updateUserName } from "../../../entities/user/model/slice"
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserProfile, selectUserStatus } from "../../../entities/user/model/selectors";
@@ -24,6 +24,14 @@ function ProfilePage() {
       dispatch(fetchUserProfile());
     }
   }, [dispatch, profile, status]);
+
+  useEffect(() => {
+    if (profile?.username) {
+      setNewName(profile.username);
+    }
+  }, [profile?.username]);
+
+  const userPosts = useMemo(() => profile?.posts ?? [], [profile?.posts]);
 
   if (status === "loading") {
     return <p className="text-center mt-10">Loading profile...</p>;
@@ -102,7 +110,25 @@ function ProfilePage() {
       </div>
       <div className="post-item p-6 mb-3">
         <h2>Your posts</h2>
-        <p>No posts yet...</p>
+        {userPosts.length > 0 ? (
+          <div className="space-y-4 mt-4">
+            {userPosts.map((post) => (
+              <article key={post.id || post._id || post.title} className="p-4 border border-gray-200 rounded-lg">
+                <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <h3 className="text-xl font-semibold break-words">{post.title}</h3>
+                  {post.createdAt && (
+                    <span className="text-sm text-gray-500">{formatDate(post.createdAt)}</span>
+                  )}
+                </header>
+                {post.content && (
+                  <p className="text-gray-700 mt-2 break-words">{post.content}</p>
+                )}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-2">No posts yet...</p>
+        )}
       </div>
     </main>
   )
