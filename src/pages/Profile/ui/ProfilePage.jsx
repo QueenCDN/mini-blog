@@ -1,16 +1,24 @@
 import Input from "../../../shared/ui/Input"
 import Button from "../../../shared/ui/Button";
-import { useEffect, useState } from "react";
-import { changeUserPassword, fetchUserProfile, updateUserName } from "../../../entities/user/model/slice"
+
+import { useEffect, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { changeUserPassword, fetchUserProfile, updateUserName } from "../../../entities/user/model/slice"
 import { selectUserProfile, selectUserStatus } from "../../../entities/user/model/selectors";
+import { fetchUserPosts, deletePost } from "../../../entities/post/model/slice.js";
 
 import { formatDate } from '../../../shared/lib/formatDate.js';
+import { selectPostsItems, selectPostsStatus } from "../../../entities/post/model/selectors.js";
+import CreatePostForm from "../../../features/createPost/ui/CreatePostForm.jsx";
 
 function ProfilePage() {
   const dispatch = useDispatch();
   const profile = useSelector(selectUserProfile);
   const status = useSelector(selectUserStatus);
+
+  const posts = useSelector(selectPostsItems);
+  const postsStatus = useSelector(selectPostsStatus);
 
   const [newName, setNewName] = useState(profile?.username || "");
   const [oldPass, setOldPass] = useState("");
@@ -24,6 +32,10 @@ function ProfilePage() {
       dispatch(fetchUserProfile());
     }
   }, [dispatch, profile, status]);
+
+  useEffect(() => {
+    dispatch(fetchUserPosts());
+  }, [dispatch]);
 
   if (status === "loading") {
     return <p className="text-center mt-10">Loading profile...</p>;
@@ -48,7 +60,7 @@ function ProfilePage() {
       setErrorMessage(err);
     }
   }
-
+  
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="post-item p-6 mb-3">
@@ -100,12 +112,32 @@ function ProfilePage() {
           )}
         </div>
       </div>
+      <CreatePostForm />
       <div className="post-item p-6 mb-3">
         <h2>Your posts</h2>
-        <p>No posts yet...</p>
+
+        {postsStatus === "loading" && <p>Loading posts...</p>}
+
+        {posts.length === 0 && postsStatus === "succeeded" && (
+          <p>No posts yet...</p>
+        )}
+
+        {posts.map(post => (
+          <div key={post._id} className="flex justify-between items-center mt-3 p-2 border-b">
+            <a href={`/post/${post._id}`} className="text-blue-400 hover:underline">
+              {post.title}
+            </a>
+            <button
+              onClick={() => dispatch(deletePost(post._id))}
+              className="text-red-500 hover:text-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        ))}
       </div>
     </main>
   )
 }
 
-export default ProfilePage
+export default ProfilePage;
