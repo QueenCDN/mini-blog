@@ -1,66 +1,146 @@
-import { Link } from "react-router-dom";
-import Button from '../../../shared/ui/Button/';
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { fetchPostById } from "../../../entities/post/model/slice";
+import {
+  selectCurrentPost,
+  selectCurrentPostError,
+  selectCurrentPostStatus,
+} from "../../../entities/post/model/selectors";
+
+import { selectIsAuth, selectAuthUser } from "../../../features/auth/model/selectors";
+import { toggleLike } from "../../../features/likePost/model/thunks";
+
+import CommentForm from "../../../features/comments/ui/CommentForm";
+import CommentList from "../../../features/comments/ui/CommentList";
+
+import { formatDate } from "../../../shared/lib/formatDate";
 
 function PostPage() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const post = useSelector(selectCurrentPost);
+  const status = useSelector(selectCurrentPostStatus);
+  const error = useSelector(selectCurrentPostError);
+
+  const isAuth = useSelector(selectIsAuth); // токен => авторизация :contentReference[oaicite:4]{index=4}
+  const authUser = useSelector(selectAuthUser);
+
+  const currentUserId = authUser?._id || authUser?.id; // на всякий
+
+  useEffect(() => {
+    if (id) dispatch(fetchPostById(id));
+  }, [dispatch, id]);
+
+  if (status === "loading") {
+    return <p className="text-center mt-10">Loading post...</p>;
+  }
+
+  if (status === "failed") {
+    return <p className="text-center mt-10 text-red-500">{error || "Failed to load post."}</p>;
+  }
+
+  if (!post) {
+    return <p className="text-center mt-10">Post not found.</p>;
+  }
+
+  const likesCount = post.likesCount ?? (Array.isArray(post.likes) ? post.likes.length : 0);
+  const isLiked =
+    currentUserId && Array.isArray(post.likes)
+      ? post.likes.some((uid) => String(uid) === String(currentUserId))
+      : false;
+
+  const onLikeClick = () => {
+    if (!isAuth) return;
+    dispatch(toggleLike({ postId: post._id, userId: currentUserId }));
+  };
+
+  // автор у тебя может быть просто ObjectId (если не populate). Поэтому аккуратно:
+  const authorLabel =
+    post.authorUsername ||
+    post.author?.username ||
+    (typeof post.author === "string" ? post.author : "Unknown");
+
   return (
     <main className="container mx-auto px-4 py-8">
-      <Link className="simple-link" style={{marginBottom: "20px"}} to={"/"}>← Return</Link>
-      <div className="post-item p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold mb-4">Why we love cats?</h2>
-        <p className="text-gray-700 mb-6">
-          Cats are wonderful companions that bring joy and comfort to our lives. Their playful nature, independent spirit, and affectionate behavior make them beloved pets around the world. Whether it's their soothing purrs or their curious antics, cats have a unique way of capturing our hearts.
-          And let's not forget their ability to reduce stress and provide emotional support. Owning a cat can lead to numerous health benefits, including lower blood pressure and reduced anxiety levels.
-        </p>
-        <hr />
-        <div className="post-meta text-sm" style={{color: "crimson", display: "flex", justifyContent: "space-between", gap: "10px", marginTop: "10px"}}>
-          <p>25 November 2025, Fonerge</p>
-          <p style={{display: "flex", alignItems: "center", gap: "5px"}}>
+      <Link className="simple-link" style={{ marginBottom: "20px" }} to="/">
+        ← Return
+      </Link>
 
+      <div className="post-item p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+
+        <p className="text-gray-700 mb-6 whitespace-pre-wrap">
+          {post.description || "No description..."}
+        </p>
+
+        <hr />
+
+        <div
+          className="post-meta text-sm"
+          style={{
+            color: "crimson",
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "10px",
+            marginTop: "10px",
+            alignItems: "center",
+          }}
+        >
+          <p>
+            {post.createdAt ? formatDate(post.createdAt) : "Unknown date"}, {authorLabel}
+          </p>
+
+          <button
+            onClick={onLikeClick}
+            disabled={!isAuth}
+            title={!isAuth ? "Login to like" : "Like"}
+            className={`flex items-center gap-2 ${!isAuth ? "opacity-50 cursor-not-allowed" : ""}`}
+          >
             <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill={isLiked ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
             </svg>
-            124
-          </p>
-          
+            {likesCount}
+          </button>
         </div>
       </div>
 
       <div className="comments-section mt-8">
         <h3 className="text-2xl font-semibold mt-8 mb-4">Comments</h3>
-        <textarea
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
-          rows="4"></textarea>
-        <Button text="Add Comment" variant="fillBtn" style={{marginBottom: "15px", width: "100%"}} />
 
-        <div className="comment-item p-4 bg-gray-100 rounded-lg mb-4">
-          <p className="text-gray-800 mb-2">
-            I absolutely love cats! They bring so much joy to my life.
-          </p>
-          <div className="comment-meta text-sm text-gray-600">
-            Posted on 26 November, 2025 by CatLover123
+        {!isAuth ? (
+          <div className="post-item p-4">
+            <p className="text-gray-600">
+              You need to log in to add comments.
+            </p>
           </div>
-        </div>
-        <div className="comment-item p-4 bg-gray-100 rounded-lg mb-4">
-          <p className="text-gray-800 mb-2">
-            Cats are the best pets! Their playful nature is unmatched.
-          </p>
-          <div className="comment-meta text-sm text-gray-600">
-            Posted on 27 November, 2025 by FelineFanatic
-          </div>
+        ) : (
+          <CommentForm postId={post._id} />
+        )}
+
+        <div className="mt-6">
+          <CommentList
+            comments={post.comments || []}
+            postId={post._id}
+            currentUserId={currentUserId}
+            postAuthorId={post.author}
+          />
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default PostPage
+export default PostPage;

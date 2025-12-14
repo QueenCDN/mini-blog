@@ -4,47 +4,84 @@ import Button from "../../../shared/ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 
-import { createPost } from "../model/thunks.js"
+import { createPost } from "../model/thunks.js";
+
+const CATEGORIES = [
+  { value: "Travel", label: "Travel 🌎" },
+  { value: "Pets", label: "Pets 🐶" },
+  { value: "DIY", label: "DIY 🔨" },
+  { value: "Science", label: "Science 🛸" },
+  { value: "Technology", label: "Technology 🚀" },
+  { value: "Other", label: "Other" },
+];
 
 function CreatePostForm() {
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.createPost.status)
+  const status = useSelector((state) => state.createPost.status);
+
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
+  const [postCategory, setPostCategory] = useState("Other");
 
   function handleCreatePost() {
     if (!postTitle.trim()) return;
-    dispatch(createPost({ title: postTitle, content: postContent }));
+
+    dispatch(
+      createPost({
+        title: postTitle,
+        content: postContent,
+        category: postCategory,
+      })
+    );
+
     setPostTitle("");
     setPostContent("");
+    setPostCategory("Other");
   }
+
   return (
     <div className="post-item p-6 mb-3">
       <h2>Create a post</h2>
-      <Input 
-          type="text" 
-          style={{marginBottom: "10px", width: "100%"}} 
-          ph="Post title"
-          value={postTitle}
-          onChange={(e) => setPostTitle(e.target.value)}
+
+      <Input
+        type="text"
+        style={{ marginBottom: "10px", width: "100%" }}
+        ph="Post title"
+        value={postTitle}
+        onChange={(e) => setPostTitle(e.target.value)}
       />
+
       <textarea
         className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
         rows="4"
         placeholder="Write your post content here..."
         value={postContent}
         onChange={(e) => setPostContent(e.target.value)}
-      ></textarea>
-      <Button 
-        text="Send" 
-        variant="fillBtn" 
-        style={{marginBottom: "15px", width: "100%"}} 
+      />
+
+      <select
+        className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+        value={postCategory}
+        onChange={(e) => setPostCategory(e.target.value)}
+      >
+        {CATEGORIES.map((cat) => (
+          <option key={cat.value} value={cat.value}>
+            {cat.label}
+          </option>
+        ))}
+      </select>
+
+      <Button
+        text="Send"
+        variant="fillBtn"
+        style={{ marginBottom: "15px", width: "100%" }}
         onClick={handleCreatePost}
       />
+
       {status === "loading" && <p>Sending...</p>}
-      {status === "succeeded" && <p style={{color: "green"}}>Post created!</p>}
+      {status === "succeeded" && <p style={{ color: "green" }}>Post created!</p>}
     </div>
-  )
+  );
 }
 
 export default CreatePostForm;
