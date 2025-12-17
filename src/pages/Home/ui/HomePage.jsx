@@ -16,12 +16,18 @@ function HomePage() {
     <main className="container mx-auto px-4 py-8">
       <SearchBar
         value={searchDraft}
-        onChange={setSearchDraft}
-        onClear={() => setSearchDraft("")}
+        onChange={(value) => {
+          setSearchDraft(value);
+          if (value.trim() !== "") {
+            setCategory("");
+          }
+        }}
+        onClear={() => {setSearchDraft(""); setCategory("");}}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Sidebar
+          activeCategory={category}
           onSelectCategory={setCategory}
         />
 

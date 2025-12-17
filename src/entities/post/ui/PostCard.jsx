@@ -6,7 +6,7 @@ function PostCard({ post }) {
     const summary = post?.description ?? post?.summary ?? post?.content ?? "";
 
     return (
-        <div className="p-4 post-item">
+        <div className="p-4 post-item mb-3">
             <h2 className="text-xl font-semibold">{title}</h2>
             {summary && (
             <p className="text-gray-600">

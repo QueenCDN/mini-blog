@@ -12,3 +12,13 @@ export const loginUser = createAsyncThunk(
         }
     }
 );
+
+export const fetchMe = createAsyncThunk("auth/fetchMe", async (_, thunkAPI) => {
+  try {
+    // если роут смонтирован как /user, будет "/user/me"
+    const res = await api.get("/user/me");
+    return res.data;
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e.response?.data?.message || "Failed to load profile");
+  }
+});

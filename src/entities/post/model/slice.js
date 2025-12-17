@@ -53,7 +53,6 @@ export const deletePost = createAsyncThunk(
   }
 );
 
-// ✅ новый thunk: один пост по id
 export const fetchPostById = createAsyncThunk(
   "posts/fetchPostById",
   async (postId, thunkAPI) => {
@@ -74,7 +73,7 @@ const initialState = {
   error: null,
   nextCursor: null,
 
-  // ✅ состояние “страницы поста”
+  // состояние страницы поста
   current: null,
   currentStatus: "idle",
   currentError: null,
@@ -91,7 +90,7 @@ const postsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ===== лента
+    // лента
     builder.addCase(fetchPosts.pending, (state) => {
       state.status = "loading";
       state.error = null;
@@ -107,7 +106,7 @@ const postsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // ===== профиль
+    // профиль
     builder.addCase(fetchUserPosts.pending, (state) => {
       state.status = "loading";
     });
@@ -120,12 +119,12 @@ const postsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // ===== удалить пост
+    // удалить пост
     builder.addCase(deletePost.fulfilled, (state, action) => {
       state.items = state.items.filter((p) => p._id !== action.payload);
     });
 
-    // ===== страница поста
+    // страница поста
     builder.addCase(fetchPostById.pending, (state) => {
       state.currentStatus = "loading";
       state.currentError = null;
@@ -139,27 +138,64 @@ const postsSlice = createSlice({
       state.currentError = action.payload;
     });
 
-    // ===== лайк (апдейтим current без перезагрузки поста)
+    // лайк
     builder.addCase(toggleLike.fulfilled, (state, action) => {
-      const { postId, userId } = action.meta.arg || {};
-      if (!state.current || state.current._id !== postId) return;
+      const { postId, userId } = action.meta?.arg || {};
+      if (!postId) return;
 
-      const { liked, likesCount } = action.payload || {};
-      if (typeof likesCount === "number") state.current.likesCount = likesCount;
+      const payload = action.payload || {};
+      const serverLiked = payload.liked;       // может быть undefined
+      const serverLikesCount = payload.likesCount;
 
-      // Если likes массив есть, обновим его тоже (чтобы “сердечко” корректно горело)
-      if (userId && Array.isArray(state.current.likes) && typeof liked === "boolean") {
-        const has = state.current.likes.some((uid) => String(uid) === String(userId));
-        if (liked && !has) state.current.likes.push(userId);
-        if (!liked && has) {
-          state.current.likes = state.current.likes.filter(
-            (uid) => String(uid) !== String(userId)
-          );
+      const pid = String(postId);
+      const uid = userId ? String(userId) : null;
+
+      const extractLikeUserId = (l) => {
+        const id =
+          typeof l === "string"
+            ? l
+            : l?._id || l?.id || l?.userId || l?.user?._id || l?.user?.id;
+        return id == null ? null : String(id);
+      };
+
+      const computeLikedFromPost = (p) => {
+        if (!uid || !Array.isArray(p?.likes)) return false;
+        return p.likes.some((l) => extractLikeUserId(l) === uid);
+      };
+
+      const applyToPost = (p) => {
+        if (!p || String(p._id) !== pid) return;
+
+        const prevLiked =
+          typeof p.isLiked === "boolean" ? p.isLiked : computeLikedFromPost(p);
+
+        const nextLiked =
+          typeof serverLiked === "boolean" ? serverLiked : !prevLiked;
+
+        p.isLiked = nextLiked;
+
+        if (typeof serverLikesCount === "number") {
+          p.likesCount = serverLikesCount;
+        } else if (typeof p.likesCount === "number") {
+          p.likesCount = Math.max(0, p.likesCount + (nextLiked ? 1 : -1));
         }
-      }
+
+        // если likes массив есть, поддержим его
+        if (uid && Array.isArray(p.likes)) {
+          const has = p.likes.some((l) => extractLikeUserId(l) === uid);
+          if (nextLiked && !has) p.likes.push(userId);
+          if (!nextLiked && has) {
+            p.likes = p.likes.filter((l) => extractLikeUserId(l) !== uid);
+          }
+        }
+      };
+
+      applyToPost(state.current);
+      state.items.forEach(applyToPost);
     });
 
-    // ===== комменты
+
+    // комменты
     builder.addCase(addComment.fulfilled, (state, action) => {
       const { postId } = action.meta.arg || {};
       if (!state.current || state.current._id !== postId) return;

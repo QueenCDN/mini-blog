@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "./thunks.js";
+import { fetchMe } from "./thunks.js";
 
 const initialState = {
     user: null,
@@ -32,6 +33,9 @@ export const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(fetchMe.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   }
 });

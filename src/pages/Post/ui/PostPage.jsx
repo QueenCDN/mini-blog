@@ -9,7 +9,11 @@ import {
   selectCurrentPostStatus,
 } from "../../../entities/post/model/selectors";
 
-import { selectIsAuth, selectAuthUser } from "../../../features/auth/model/selectors";
+import {
+  selectIsAuth,
+  selectAuthUser,
+} from "../../../features/auth/model/selectors";
+
 import { toggleLike } from "../../../features/likePost/model/thunks";
 
 import CommentForm from "../../../features/comments/ui/CommentForm";
@@ -25,39 +29,42 @@ function PostPage() {
   const status = useSelector(selectCurrentPostStatus);
   const error = useSelector(selectCurrentPostError);
 
-  const isAuth = useSelector(selectIsAuth); // токен => авторизация :contentReference[oaicite:4]{index=4}
+  const isAuth = useSelector(selectIsAuth);
   const authUser = useSelector(selectAuthUser);
 
-  const currentUserId = authUser?._id || authUser?.id; // на всякий
+  const currentUserId =
+    authUser?._id || authUser?.id || authUser?.user?._id || authUser?.user?.id;
 
   useEffect(() => {
     if (id) dispatch(fetchPostById(id));
   }, [dispatch, id]);
 
-  if (status === "loading") {
-    return <p className="text-center mt-10">Loading post...</p>;
-  }
-
-  if (status === "failed") {
-    return <p className="text-center mt-10 text-red-500">{error || "Failed to load post."}</p>;
-  }
-
-  if (!post) {
-    return <p className="text-center mt-10">Post not found.</p>;
-  }
+  if (status === "loading") return <p className="text-center mt-10">Loading post...</p>;
+  if (status === "failed") return <p className="text-center mt-10 text-red-500">{error || "Failed to load post."}</p>;
+  if (!post) return <p className="text-center mt-10">Post not found.</p>;
 
   const likesCount = post.likesCount ?? (Array.isArray(post.likes) ? post.likes.length : 0);
-  const isLiked =
-    currentUserId && Array.isArray(post.likes)
-      ? post.likes.some((uid) => String(uid) === String(currentUserId))
-      : false;
+  const likesArray = Array.isArray(post.likes) ? post.likes : [];
+
+  const isLikedByArray =
+    Boolean(currentUserId) &&
+    likesArray.some((l) => {
+      const likedId =
+        typeof l === "string"
+          ? l
+          : l?._id || l?.id || l?.userId || l?.user?._id || l?.user?.id;
+      return String(likedId) === String(currentUserId);
+    });
+
+  const isLikedUI = typeof post.isLiked === "boolean" ? post.isLiked : isLikedByArray;
 
   const onLikeClick = () => {
     if (!isAuth) return;
-    dispatch(toggleLike({ postId: post._id, userId: currentUserId }));
+    dispatch(toggleLike({ postId: post._id, userId: currentUserId }))
+      .unwrap()
+      .catch((e) => console.error("Like toggle failed:", e));
   };
 
-  // автор у тебя может быть просто ObjectId (если не populate). Поэтому аккуратно:
   const authorLabel =
     post.authorUsername ||
     post.author?.username ||
@@ -90,7 +97,8 @@ function PostPage() {
           }}
         >
           <p>
-            {post.createdAt ? formatDate(post.createdAt) : "Unknown date"}, {authorLabel}
+            {post.createdAt ? formatDate(post.createdAt) : "Unknown date"},{" "}
+            {authorLabel}
           </p>
 
           <button
@@ -104,13 +112,16 @@ function PostPage() {
               width="22"
               height="22"
               viewBox="0 0 24 24"
-              fill={isLiked ? "currentColor" : "none"}
-              stroke="currentColor"
+              fill="none"
+              stroke="crimson"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+              <path
+                d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"
+                style={{ fill: isLikedUI ? "crimson" : "none" }}
+              />
             </svg>
             {likesCount}
           </button>
@@ -122,9 +133,7 @@ function PostPage() {
 
         {!isAuth ? (
           <div className="post-item p-4">
-            <p className="text-gray-600">
-              You need to log in to add comments.
-            </p>
+            <p className="text-gray-600">You need to log in to add comments.</p>
           </div>
         ) : (
           <CommentForm postId={post._id} />
