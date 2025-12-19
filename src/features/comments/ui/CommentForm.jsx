@@ -19,9 +19,9 @@ function CommentForm({ postId }) {
   };
 
   return (
-    <div className="mt-4">
+    <div className="post-item p-2 mt-4">
       <textarea
-        className="w-full p-3 mb-3 border border-gray-300 rounded-lg"
+        className="w-full p-3 mb-2 border border-gray-300 rounded-lg"
         rows="4"
         placeholder="Write a comment..."
         value={text}

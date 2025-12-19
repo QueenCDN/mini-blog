@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const apiURL = "http://localhost:4000/api";
+export const apiURL = "https://apiminiblog.netlify.app/api/";
 
 const api = axios.create({
   baseURL: apiURL,

@@ -6,7 +6,7 @@ function CommentList({ comments = [], postId, currentUserId, postAuthorId }) {
   const dispatch = useDispatch();
 
   if (!comments.length) {
-    return <p className="text-gray-500">No comments yet...</p>;
+    return <p className="text-gray-500 mb-4">No comments yet...</p>;
   }
 
   const canDelete = (commentUserId) =>
@@ -17,7 +17,7 @@ function CommentList({ comments = [], postId, currentUserId, postAuthorId }) {
   return (
     <div className="space-y-3">
       {comments.map((c) => (
-        <div key={c._id} className="comment-item p-4 bg-gray-100 rounded-lg">
+        <div key={c._id} className="comment-item p-4 bg-gray-100 rounded-lg mb-3">
           <p className="text-gray-800 mb-2">{c.text}</p>
 
           <div className="text-sm text-gray-600 flex justify-between items-center gap-2">

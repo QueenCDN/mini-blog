@@ -73,7 +73,7 @@ function PostPage() {
   return (
     <main className="container mx-auto px-4 py-8">
       <Link className="simple-link" style={{ marginBottom: "20px" }} to="/">
-        ← Return
+        ⬅ Return
       </Link>
 
       <div className="post-item p-6 bg-white rounded-lg shadow-md">
@@ -132,7 +132,7 @@ function PostPage() {
         <h3 className="text-2xl font-semibold mt-8 mb-4">Comments</h3>
 
         {!isAuth ? (
-          <div className="post-item p-4">
+          <div className="post-item p-4 mb-2">
             <p className="text-gray-600">You need to log in to add comments.</p>
           </div>
         ) : (

@@ -21,7 +21,7 @@ function UserPosts() {
     <div className="post-item p-6 mb-3">
       <h2>Your posts</h2>
 
-      {postsStatus === "loading" && <p>Loading posts...</p>}
+      {postsStatus === "loading" && <p className="mb-2 mt-2">Loading posts...</p>}
 
       {postsStatus === "succeeded" && posts.length === 0 && (
         <p>No posts yet...</p>
@@ -30,15 +30,15 @@ function UserPosts() {
       {posts.map((post) => (
         <div
           key={post._id}
-          className="flex justify-between items-center mt-3 p-2 border-b"
+          className="category-link flex justify-between items-center"
         >
-          <Link to={`/post/${post._id}`} className="text-blue-400 hover:underline">
+          <Link to={`/post/${post._id}`}>
             {post.title}
           </Link>
 
           <button
             onClick={() => dispatch(deletePost(post._id))}
-            className="text-red-500 hover:text-red-700"
+            className="text-red-500 hover:text-white"
           >
             Delete
           </button>

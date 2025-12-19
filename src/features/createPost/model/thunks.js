@@ -3,11 +3,11 @@ import api from "../../../shared/api/axios";
 
 export const createPost = createAsyncThunk(
   "post/createPost",
-  async ({ title, content, category }, thunkAPI) => {
+  async ({ title, description, category }, thunkAPI) => {
     try {
       const response = await api.post("/posts", {
         title,
-        description: content,
+        description: description,
         category: category || "Other",
       });
       return response.data;

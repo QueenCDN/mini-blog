@@ -13,7 +13,7 @@ function PostCard({ post }) {
                 {summary.length > 160 ? summary.slice(0, 160) + "..." : summary}
             </p>    
             )}
-            <Link className="simple-link" style={{marginTop: "10px"}} to={`/post/${id}`}>Read More</Link>
+            <Link className="simple-link" style={{marginTop: "10px"}} to={`/post/${id}`}>Read More ⮕</Link>
         </div>
     )
 }

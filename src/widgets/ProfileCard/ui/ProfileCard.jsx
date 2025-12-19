@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../shared/ui/Input";
 import Button from "../../../shared/ui/Button";
 
-import { changeUserPassword,fetchUserProfile,updateUserName } from "../../../entities/user/model/slice";
+import { changeUserPassword, fetchUserProfile, updateUserName } from "../../../entities/user/model/slice";
 import { selectUserProfile, selectUserStatus } from "../../../entities/user/model/selectors";
 
 import { formatDate } from "../../../shared/lib/formatDate";
@@ -15,11 +15,9 @@ function ProfileCard() {
   const profile = useSelector(selectUserProfile);
   const status = useSelector(selectUserStatus);
 
-  const [draftName, setDraftName] = useState(null);
-
+  const [draftName, setDraftName] = useState("");
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
-
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,15 +27,21 @@ function ProfileCard() {
     }
   }, [dispatch, profile, status]);
 
-  const username = profile?.username ?? "";
-  const nameValue = draftName ?? username;
+  const handleUpdateName = async () => {
+    const currentUsername = profile?.username ?? "";
+    const nextName = draftName.trim();
 
-  const handleUpdateName = () => {
-    const nextName = nameValue.trim();
-    if (!nextName || nextName === username) return;
+    if (!nextName || nextName === currentUsername) return;
 
-    dispatch(updateUserName(nextName));
-    setDraftName(null);
+    try {
+      await dispatch(updateUserName(nextName)).unwrap();
+      setDraftName("");
+      setSuccessMessage("Имя успешно изменено!");
+      setErrorMessage("");
+    } catch (err) {
+      setSuccessMessage("");
+      setErrorMessage(err?.message ?? String(err));
+    }
   };
 
   const handleChangePassword = async () => {
@@ -73,8 +77,8 @@ function ProfileCard() {
         <Input
           type="text"
           style={{ marginBottom: "10px", marginRight: "10px" }}
-          ph="username"
-          value={nameValue}
+          ph="new username"
+          value={draftName}
           onChange={(e) => setDraftName(e.target.value)}
         />
         <Button text="Edit" variant="fillBtn" onClick={handleUpdateName} />

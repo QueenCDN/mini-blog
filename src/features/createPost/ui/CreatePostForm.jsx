@@ -2,9 +2,10 @@ import Input from "../../../shared/ui/Input";
 import Button from "../../../shared/ui/Button";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { createPost } from "../model/thunks.js";
+import { fetchUserPosts } from "../../../entities/post/model/slice"; // ✅ добавили
 
 const CATEGORIES = [
   { value: "Travel", label: "Travel 🌎" },
@@ -23,21 +24,36 @@ function CreatePostForm() {
   const [postContent, setPostContent] = useState("");
   const [postCategory, setPostCategory] = useState("Other");
 
-  function handleCreatePost() {
-    if (!postTitle.trim()) return;
+  const titleTrim = postTitle.trim();
+  const contentTrim = postContent.trim();
 
-    dispatch(
-      createPost({
-        title: postTitle,
-        content: postContent,
-        category: postCategory,
-      })
-    );
+  const canSubmit = useMemo(() => {
+    return titleTrim.length > 0 && contentTrim.length > 0 && status !== "loading";
+  }, [titleTrim, contentTrim, status]);
 
-    setPostTitle("");
-    setPostContent("");
-    setPostCategory("Other");
-  }
+  const handleCreatePost = async () => {
+    if (!canSubmit) return;
+
+    try {
+      await dispatch(
+        createPost({
+          title: titleTrim,
+          description: contentTrim, // ✅ ВАЖНО: бэк ждёт description
+          category: postCategory,
+        })
+      ).unwrap();
+
+      // ✅ обновляем список постов пользователя без перезагрузки страницы
+      dispatch(fetchUserPosts());
+
+      // ✅ очищаем поля только после успеха
+      setPostTitle("");
+      setPostContent("");
+      setPostCategory("Other");
+    } catch (e) {
+      console.error("Create post failed:", e);
+    }
+  };
 
   return (
     <div className="post-item p-6 mb-3">
@@ -72,13 +88,18 @@ function CreatePostForm() {
       </select>
 
       <Button
-        text="Send"
+        text={status === "loading" ? "Sending..." : "Send"}
         variant="fillBtn"
-        style={{ marginBottom: "15px", width: "100%" }}
+        style={{
+          marginBottom: "15px",
+          width: "100%",
+          opacity: canSubmit ? 1 : 0.5,
+          cursor: canSubmit ? "pointer" : "not-allowed",
+        }}
+        disabled={!canSubmit}
         onClick={handleCreatePost}
       />
 
-      {status === "loading" && <p>Sending...</p>}
       {status === "succeeded" && <p style={{ color: "green" }}>Post created!</p>}
     </div>
   );
