@@ -68,7 +68,7 @@ function CreatePostForm() {
       />
 
       <textarea
-        className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+        className="description-textarea mb-2"
         rows="4"
         placeholder="Write your post content here..."
         value={postContent}
@@ -76,7 +76,7 @@ function CreatePostForm() {
       />
 
       <select
-        className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+        className="category-select mb-4"
         value={postCategory}
         onChange={(e) => setPostCategory(e.target.value)}
       >

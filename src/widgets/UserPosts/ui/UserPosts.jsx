@@ -30,7 +30,7 @@ function UserPosts() {
       {posts.map((post) => (
         <div
           key={post._id}
-          className="category-link flex justify-between items-center"
+          className="user-post flex justify-between items-center"
         >
           <Link to={`/post/${post._id}`}>
             {post.title}
@@ -38,7 +38,7 @@ function UserPosts() {
 
           <button
             onClick={() => dispatch(deletePost(post._id))}
-            className="text-red-500 hover:text-white"
+            className="simple-link"
           >
             Delete
           </button>
